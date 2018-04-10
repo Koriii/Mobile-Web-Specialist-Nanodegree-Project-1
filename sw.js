@@ -1,7 +1,7 @@
 const CACHE_NAME = 'restaurant-reviews-v1';
 const CACHE_NAME_IMG = 'restaurant-reviews-img-v1';
 const urlsToCache = [
-  '/index.html',
+  '/',
   '/css/styles.css',
   '/js/main.js',
   '/js/restaurant_info.js',
@@ -14,8 +14,16 @@ self.addEventListener( 'install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       console.log(event);
-      return cache.addAll(urlsToCache);
-    }).then(()  =>{
+      return cache.addAll([
+        '/',
+        '/css/styles.css',
+        '/js/main.js',
+        '/js/restaurant_info.js',
+        '/js/dbhelper.js',
+        'https://maps.googleapis.com/maps/api/js?key=AIzaSyCxzmO6E_f5Gm9PG3cgFstWUUC18Nh22mU&libraries=places&callback=initMap',
+        '/data/restaurants.json',
+        ]);
+    }).then(() => {
       return self.skipWaiting();
     })
   );
