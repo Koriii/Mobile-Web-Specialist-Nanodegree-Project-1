@@ -81,6 +81,11 @@ window.initMap = () => {
     scrollwheel: false
   });
   updateRestaurants();
+  google.maps.event.addListener(self.map, "tilesloaded", () => {
+      [].slice.apply(document.querySelectorAll('#map a')).forEach((item) => {
+          item.setAttribute('tabindex','-1');
+      });
+  })
 }
 
 /**
@@ -137,6 +142,7 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  */
 createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
+  const li_tabindex = li.id + 3
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
@@ -159,6 +165,7 @@ createRestaurantHTML = (restaurant) => {
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.setAttribute("rel", restaurant.name);
+  more.setAttribute("tabindex", li_tabindex);
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more);
 
@@ -175,11 +182,6 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     google.maps.event.addListener(marker, 'click', () => {
       window.location.href = marker.url
     });
-    google.maps.event.addListener(marker, "tilesloaded", function(){
-        [].slice.apply(document.querySelectorAll('#map a')).forEach(function(item) {
-            item.setAttribute('tabindex','-1');
-        });
-    })
     self.markers.push(marker);
   });
 }

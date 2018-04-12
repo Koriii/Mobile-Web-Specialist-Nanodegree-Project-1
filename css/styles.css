@@ -134,6 +134,9 @@ nav h1 a {
   padding: 0 15px;
   width: 200px;
 }
+.filter-options select:focus {
+  outline: 3px solid red;
+}
 
 /* ====================== Restaurant Listing ====================== */
 #restaurants-list {

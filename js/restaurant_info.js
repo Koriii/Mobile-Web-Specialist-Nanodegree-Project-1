@@ -16,11 +16,10 @@ window.initMap = () => {
       });
       fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
-
-      google.maps.event.addListener(self.map, "tilesloaded", function(){
-          [].slice.apply(document.querySelectorAll('#map a')).forEach(function(item) {
-              item.setAttribute('tabindex','-1');
-          });
+      google.maps.event.addListener(restaurant, "tilesloaded", function(){
+        [].slice.apply(document.querySelectorAll('#map a')).forEach(function(item) {
+            item.setAttribute('tabindex','-1');
+        });
       })
     }
   });
