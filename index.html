@@ -14,24 +14,28 @@
 
 <body>
   <header>
-    <nav>
+    <nav aria-label="Breadcrumb" class="breadcrumb">
       <h1><a href="/" rel="Back to Restaurant Reviews" tabindex="1">Restaurant Reviews</a></h1>
     </nav>
   </header>
 
   <main id="maincontent">
-    <section id="map-container" tabindex="-1">
-      <div id="map" tabindex="-1"></div>
+    <section role="map" id="map-container">
+      <div id="map"></div>
     </section>
     <section>
       <div class="filter-options">
         <h2>Filter Results</h2>
-        <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()" tabindex="2">
+        <label for="neighborhoods">Choose Neighbour:
+        <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()"">
           <option value="all">All Neighborhoods</option>
         </select>
-        <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()" tabindex="3">
+        </label>
+        <label for="cuisines">Choose Cusine:
+        <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
           <option value="all">All Cuisines</option>
         </select>
+        </label>
       </div>
       <ul id="restaurants-list"></ul>
     </section>
@@ -39,7 +43,7 @@
 
 
   <footer id="footer">
-    Copyright (c) 2017 <a href="/" title="Go to Restaurant Reviews"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+    Copyright (c) 2017 <a href="/" title="Go to Restaurant Reviews" rel="Footer link to Restaurant Reviews" aria-current="page"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
   </footer>
 
   <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>

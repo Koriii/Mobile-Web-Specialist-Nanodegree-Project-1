@@ -150,7 +150,17 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}`);
+    const screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    let responsiveImg = (`/img/${restaurant.photograph}`);
+    if (screenWidth < 480) {
+      return [responsiveImg.slice(0, 5), 's', responsiveImg.slice(5)].join('');
+      // console.log('S, ' + output)
+    } else if (screenWidth < 800) {
+      return [responsiveImg.slice(0, 5), 'm', responsiveImg.slice(5)].join('');
+      // console.log('M' + output)
+    } else {
+      return (`/img/${restaurant.photograph}`);
+    }
   }
 
   /**
