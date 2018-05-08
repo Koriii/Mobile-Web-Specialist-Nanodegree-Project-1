@@ -22,7 +22,7 @@ fetchNeighborhoods = () => {
       fillNeighborhoodsHTML();
     }
   });
-  DBHelper.fetchRestaurant();
+  // DBHelper.fetchRestaurant();
 }
 
 /**
