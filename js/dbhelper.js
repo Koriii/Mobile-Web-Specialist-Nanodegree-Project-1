@@ -29,6 +29,17 @@ class DBHelper {
       }
     };
     xhr.send();
+  }  
+
+  static fetchRestaurant() {
+    fetch('http://localhost:1337/restaurants', {
+    }).then(response => response.json()).then(function (data) {
+      console.log(data)
+    }).catch(e => DBHelper.requestError(e, 'error'));
+  }
+
+  static requestError(e, part) {
+      console.log(e);
   }
 
   /**

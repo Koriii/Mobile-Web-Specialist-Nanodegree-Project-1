@@ -1,6 +1,4 @@
-let restaurants,
-  neighborhoods,
-  cuisines
+let restaurants, neighborhoods, cuisines
 var map
 var markers = []
 
@@ -24,6 +22,7 @@ fetchNeighborhoods = () => {
       fillNeighborhoodsHTML();
     }
   });
+  DBHelper.fetchRestaurant();
 }
 
 /**
