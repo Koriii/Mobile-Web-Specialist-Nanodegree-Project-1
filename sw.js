@@ -14,7 +14,7 @@ self.addEventListener('install', (event) => {
       'js/main.js',
       'js/restaurant_info.js',
       'js/dbhelper.js',
-      'data/restaurants.json',
+      'http://localhost:1337/restaurants',
       ]);
     })
   );
