@@ -3,10 +3,10 @@ const dbPromise = idb.open('restaurants', 1, upgradeDB => {
     case 0:
       upgradeDB.createObjectStore('restaurants');
   }
-});
+})
  
 const idbKeyval = {
-  get(key) {
+  get(key, idb) {
     return dbPromise.then(db => {
       return db.transaction('restaurants').objectStore('restaurants').get(key);
     });
@@ -45,7 +45,6 @@ const idbKeyval = {
         keys.push(cursor.key);
         cursor.continue();
       });
- 
       return tx.complete.then(() => keys);
     });
   }

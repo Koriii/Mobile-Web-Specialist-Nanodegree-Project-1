@@ -17,12 +17,38 @@ class DBHelper {
    */
   static fetchRestaurants(callback) {
     fetch(DBHelper.DATABASE_URL, {
-    }).then(response => response.json()).then(function (data) {
+    }).then(response => response.json()).then(data => {
+      // DBHelper.storeIDB(data);
       callback(null, data);
     }).catch(e => DBHelper.requestError(e, 'error'));
   }
+
+  /**
+   * fetch Error handler
+   */
   static requestError(e, part) {
       console.log(e);
+  }
+
+  /**
+   * IndexedDB fill
+   */
+  static storeIDB(id, callback) {
+    DBHelper.fetchRestaurants((error, restaurants) => {
+      if(error) {
+        callback(error, null);
+      } else {
+        for (const r in restaurants) {
+          const restaurant = restaurants[r]
+          if (restaurant) {
+            idbKeyval.set(restaurant.id, restaurant);
+            callback(null, 'Restaurant stored properly')
+          } else {
+            callback('Restaurant does not exist', null);
+          }
+        }
+      }
+    });
   }
 
   /**
@@ -146,12 +172,12 @@ class DBHelper {
   static imageUrlForRestaurant(restaurant) {
     const screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     let responsiveImg = (`/img/${restaurant.photograph}.jpg`);
-    if (screenWidth < 480) {
-      return [responsiveImg.slice(0, 5), 's', responsiveImg.slice(5)].join('');
-      // console.log('S, ' + output)
-    } else if (screenWidth < 800) {
+    if (responsiveImg.includes('undefined')) {
+      return (`/img/NoImage.svg`);
+    } else if (screenWidth < 480) {
       return [responsiveImg.slice(0, 5), 'm', responsiveImg.slice(5)].join('');
-      // console.log('M' + output)
+    } else if (screenWidth < 800) {
+      return [responsiveImg.slice(0, 5), 's', responsiveImg.slice(5)].join('');
     } else {
       return (`/img/${restaurant.photograph}.jpg`);
     }

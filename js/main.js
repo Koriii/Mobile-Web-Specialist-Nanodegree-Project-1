@@ -22,7 +22,6 @@ fetchNeighborhoods = () => {
       fillNeighborhoodsHTML();
     }
   });
-  // DBHelper.fetchRestaurant();
 }
 
 /**
@@ -167,12 +166,6 @@ createRestaurantHTML = (restaurant) => {
   //more.setAttribute("tabindex", li_tabindex);
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more);
-
-  idbKeyval.set(restaurant.name, {
-    address: restaurant.address,
-    neighborhood: restaurant.neighborhood,
-    image: image.src,
-  });
 
   return li
 }

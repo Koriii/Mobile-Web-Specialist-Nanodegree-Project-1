@@ -33,6 +33,12 @@
 
   <!-- Beginning main -->
   <main id="maincontent">
+    <!-- Beginning map -->
+    
+    <section role="appliaction" id="map-container">
+      <div id="map"></div>
+    </section>
+    <!-- End map -->
     <!-- Beginning restaurant -->
     <section id="restaurant-container">
       <h2 id="restaurant-name"></h2>
@@ -47,12 +53,6 @@
       <ul id="reviews-list"></ul>
     </section>
     <!-- End reviews -->
-    
-    <!-- Beginning map -->
-    <section role="appliaction" id="map-container">
-      <div id="map"></div>
-    </section>
-    <!-- End map -->
   </main>
   <!-- End main -->
 
@@ -64,9 +64,11 @@
 
   <!-- Beginning scripts -->
   <!-- Database helpers -->
+  <script type="application/javascript" charset="utf-8" src="js/idb.js"></script>
   <script type="text/javascript" src="js/dbhelper.js"></script>
   <!-- Main javascript file -->
   <script type="text/javascript" src="js/restaurant_info.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/idb/index.js"></script>
   <!-- Google Maps -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfb54SpUblRU9P-HzdLTIClow5iYeGgkM&libraries=places&callback=initMap"></script>
   <!-- End scripts -->

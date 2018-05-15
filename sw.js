@@ -14,6 +14,7 @@ self.addEventListener('install', (event) => {
       'js/main.js',
       'js/restaurant_info.js',
       'js/dbhelper.js',
+      'js/idb/index.js',
       'http://localhost:1337/restaurants',
       ]);
     })
