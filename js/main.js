@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
   fetchCuisines();
 });
 
+DBHelper.storeIDB();
+
 /**
  * Fetch all neighborhoods and set their HTML.
  */

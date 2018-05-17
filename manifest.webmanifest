@@ -1,0 +1,22 @@
+{
+  "name": "Restaurants web app",
+  "short_name": "Restaurants",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#F3F3F3",
+  "theme_color": "#009AD7",
+  "description": "Web app for Udacity nanodegree showing restaurants availible in the New York",
+  "icons": [{
+    "src": "img/NoImage.svg",
+    "sizes": "192x192",
+    "type": "image/svg"
+  }, {
+    "src": "img/NoImage.svg",
+    "sizes": "512x512",
+    "type": "image/svg"
+  }],
+  "related_applications": [{
+    "platform": "maps",
+    "url": "https://maps.googleapis.com/maps/api/js?key=AIzaSyCfb54SpUblRU9P-HzdLTIClow5iYeGgkM&libraries=places&callback=initMap"
+  }]
+}

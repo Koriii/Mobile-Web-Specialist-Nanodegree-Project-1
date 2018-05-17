@@ -8,6 +8,7 @@ self.addEventListener('install', (event) => {
     console.log(event);
     return cache.addAll([
       '/',
+      'http://localhost:8000',
       'index.html',
       'restaurant.html',
       'css/styles.css',

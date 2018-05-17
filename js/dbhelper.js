@@ -18,7 +18,6 @@ class DBHelper {
   static fetchRestaurants(callback) {
     fetch(DBHelper.DATABASE_URL, {
     }).then(response => response.json()).then(data => {
-      // DBHelper.storeIDB(data);
       callback(null, data);
     }).catch(e => DBHelper.requestError(e, 'error'));
   }
@@ -42,7 +41,6 @@ class DBHelper {
           const restaurant = restaurants[r]
           if (restaurant) {
             idbKeyval.set(restaurant.id, restaurant);
-            callback(null, 'Restaurant stored properly')
           } else {
             callback('Restaurant does not exist', null);
           }
