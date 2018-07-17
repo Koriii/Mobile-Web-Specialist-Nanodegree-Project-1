@@ -1,4 +1,5 @@
 let restaurant;
+let review;
 var map;
 
 /**
@@ -44,8 +45,17 @@ fetchRestaurantFromURL = (callback) => {
         console.error(error);
         return;
       }
+      DBHelper.fetchReviewsById(id, (error, reviews) => {
+        const review = [];
+        for (const item of reviews) {
+          if (item.restaurant_id == restaurant.id) {
+            review.push(item)
+          }
+        }
+        fillReviewsHTML(review);     
+      });
       fillRestaurantHTML();
-      callback(null, restaurant)
+      callback(null, restaurant, review)
     });
   }
 }
@@ -71,8 +81,6 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
-  // fill reviews
-  fillReviewsHTML();
 }
 
 /**
@@ -95,26 +103,70 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
   }
 }
 
+const postData = (url, form) => {
+  // Default options are marked with *
+    return fetch(url, {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        // headers: {
+            // "Content-Type": "application/json; charset=utf-8",
+            // "Content-Type": "application/x-www-form-urlencoded",
+            // "Content-Type": "application/x-www-form-urlencoded",
+        // },
+        body: form
+    })
+    .then(response => response) // parses response to JSON
+    .catch(error => console.error(`Fetch Error =\n`, error));
+};
+
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = (review = self.review) => {
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
 
-  if (!reviews) {
+  if (!review) {
     const noReviews = document.createElement('p');
     noReviews.innerHTML = 'No reviews yet!';
     container.appendChild(noReviews);
     return;
   }
   const ul = document.getElementById('reviews-list');
-  reviews.forEach(review => {
+  review.forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
   container.appendChild(ul);
+
+  const form = document.createElement('div');
+  container.appendChild(form);
+
+  const formInput = document.createElement('input');
+  form.appendChild(formInput);
+
+  const formRating = document.createElement('input');
+  form.appendChild(formRating);
+
+  const formText = document.createElement('textarea');
+  form.appendChild(formText);
+
+  const formSubmit = document.createElement('button');
+  formSubmit.setAttribute('onclick', 'postData()');
+  formSubmit.innerHTML= 'Submit'; 
+  // formSubmit.onclick(postData);
+  form.appendChild(formSubmit);
+
+  let formN = new FormData();
+  formN.append('restaurant_id', review.length + 1);
+  formN.append('name', formInput);
+  formN.append('rating', formRating);
+  formN.append('comments', formText);
+
+  postData('http://localhost:1337/reviews/', formN)
+    .then(data => console.log(data)) // JSON from `response.json()` call
+    .catch(error => console.error(error));
+
 }
 
 /**
@@ -127,7 +179,7 @@ createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('span');
-  date.innerHTML = review.date;
+  date.innerHTML = review.createdAt;
   li.appendChild(date);
 
   const rating = document.createElement('p');

@@ -9,14 +9,24 @@ class DBHelper {
    */
   static get DATABASE_URL() {
     const port = 1337 // Change this to your server port
-    return `http://localhost:${port}/restaurants`;
+    return `http://localhost:${port}/`;
   }
 
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    fetch(DBHelper.DATABASE_URL, {
+    fetch(DBHelper.DATABASE_URL + 'restaurants', {
+    }).then(response => response.json()).then(data => {
+      callback(null, data);
+    }).catch(e => DBHelper.requestError(e, 'error'));
+  }
+
+  /**
+   * Fetch all reviews.
+   */
+  static fetchReviews(callback) {
+    fetch(DBHelper.DATABASE_URL + 'reviews', {
     }).then(response => response.json()).then(data => {
       callback(null, data);
     }).catch(e => DBHelper.requestError(e, 'error'));
@@ -38,13 +48,42 @@ class DBHelper {
         callback(error, null);
       } else {
         for (const r in restaurants) {
-          const restaurant = restaurants[r]
+          const restaurant = restaurants[r];
           if (restaurant) {
             idbKeyval.set(restaurant.id, restaurant);
           } else {
             callback('Restaurant does not exist', null);
           }
         }
+      }
+    });
+
+    DBHelper.fetchReviews((error, reviews) => {
+      if (error) {
+        callback(error, null)
+      } else {
+        for (const r in reviews) {
+          const review = reviews[r];
+          if (review) {
+            idbKeyval.set(review.id, review);
+          } else {
+            callback('Restaurant does not exist', null);
+          }
+        }    
+      }
+    });
+  }
+
+  static fetchReviewsById(id, callback) {
+    DBHelper.fetchReviews((error, reviews) => {
+      if (error) {
+        callback(error, null);
+      } else {
+        if (reviews) {
+          callback(null, reviews);
+        } else {
+          callback('Review does not exist', null);
+        } 
       }
     });
   }
