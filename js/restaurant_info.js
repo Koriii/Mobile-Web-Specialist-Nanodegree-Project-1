@@ -103,25 +103,10 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
   }
 }
 
-const postData = (url, form) => {
-  // Default options are marked with *
-    return fetch(url, {
-        method: "POST", // *GET, POST, PUT, DELETE, etc.
-        // headers: {
-            // "Content-Type": "application/json; charset=utf-8",
-            // "Content-Type": "application/x-www-form-urlencoded",
-            // "Content-Type": "application/x-www-form-urlencoded",
-        // },
-        body: form
-    })
-    .then(response => response) // parses response to JSON
-    .catch(error => console.error(`Fetch Error =\n`, error));
-};
-
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (review = self.review) => {
+fillReviewsHTML = (review = self.review, restaurant = self.restaurant) => {
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
@@ -140,34 +125,54 @@ fillReviewsHTML = (review = self.review) => {
   container.appendChild(ul);
 
   const form = document.createElement('div');
+  form.setAttribute('id', 'review-form');
+  form.setAttribute('method', 'POST');
   container.appendChild(form);
 
   const formInput = document.createElement('input');
+  formInput.setAttribute('id', 'name-input');
   form.appendChild(formInput);
 
   const formRating = document.createElement('input');
+  formRating.setAttribute('id', 'rating-input');
   form.appendChild(formRating);
 
   const formText = document.createElement('textarea');
+  formText.setAttribute('id', 'review-input');
   form.appendChild(formText);
 
   const formSubmit = document.createElement('button');
   formSubmit.setAttribute('onclick', 'postData()');
   formSubmit.innerHTML= 'Submit'; 
-  // formSubmit.onclick(postData);
   form.appendChild(formSubmit);
-
-  let formN = new FormData();
-  formN.append('restaurant_id', review.length + 1);
-  formN.append('name', formInput);
-  formN.append('rating', formRating);
-  formN.append('comments', formText);
-
-  postData('http://localhost:1337/reviews/', formN)
-    .then(data => console.log(data)) // JSON from `response.json()` call
-    .catch(error => console.error(error));
-
 }
+
+reviewForm = (review = self.review, restaurant = self.restaurant) => {
+  const nameInput = document.getElementById('name-input').value;
+  const ratingInput = document.getElementById('rating-input').value;
+  const reviewInput = document.getElementById('review-input').value;
+
+  let formData = new FormData();
+  formData.append('restaurant_id', restaurant.id);
+  formData.append('name', nameInput);
+  formData.append('rating', ratingInput);
+  formData.append('comments', reviewInput);
+
+  return formData;
+}
+
+postData = () => {
+  return fetch('http://localhost:1337/reviews/', {
+    method: "POST",
+    body: reviewForm()
+  }).then(
+    response => response.json()
+  ).catch(
+    error => console.error(`Fetch Error =\n`, error)
+  ).then(
+    response => console.log('Success:', response)
+  );
+};
 
 /**
  * Create review HTML and add it to the webpage.
