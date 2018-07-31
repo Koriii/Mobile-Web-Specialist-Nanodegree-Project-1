@@ -208,7 +208,7 @@ class DBHelper {
    */
   static imageUrlForRestaurant(restaurant) {
     const screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    let responsiveImg = (`/img/${restaurant.photograph}.jpg`);
+    let responsiveImg = (`/img/${restaurant.photograph}.webp`);
     if (responsiveImg.includes('undefined')) {
       return (`/img/NoImage.svg`);
     } else if (screenWidth < 480) {
@@ -216,7 +216,7 @@ class DBHelper {
     } else if (screenWidth < 800) {
       return [responsiveImg.slice(0, 5), 's', responsiveImg.slice(5)].join('');
     } else {
-      return (`/img/${restaurant.photograph}.jpg`);
+      return (`/img/${restaurant.photograph}.webp`);
     }
   }
 

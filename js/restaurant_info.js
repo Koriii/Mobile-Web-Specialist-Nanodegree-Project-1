@@ -1,6 +1,6 @@
 let restaurant;
 let review;
-var map;
+let map;
 
 /**
  * Initialize Google map, called from HTML.
@@ -106,7 +106,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (review = self.review, restaurant = self.restaurant) => {
+fillReviewsHTML = (review = self.review) => {
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
@@ -118,53 +118,104 @@ fillReviewsHTML = (review = self.review, restaurant = self.restaurant) => {
     container.appendChild(noReviews);
     return;
   }
+    let i = 0
+
   const ul = document.getElementById('reviews-list');
   review.forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
   container.appendChild(ul);
-
-  const form = document.createElement('div');
-  form.setAttribute('id', 'review-form');
-  form.setAttribute('method', 'POST');
-  container.appendChild(form);
-
-  const formInput = document.createElement('input');
-  formInput.setAttribute('id', 'name-input');
-  form.appendChild(formInput);
-
-  const formRating = document.createElement('input');
-  formRating.setAttribute('id', 'rating-input');
-  form.appendChild(formRating);
-
-  const formText = document.createElement('textarea');
-  formText.setAttribute('id', 'review-input');
-  form.appendChild(formText);
-
-  const formSubmit = document.createElement('button');
-  formSubmit.setAttribute('onclick', 'postData()');
-  formSubmit.innerHTML= 'Submit'; 
-  form.appendChild(formSubmit);
 }
 
-reviewForm = (review = self.review, restaurant = self.restaurant) => {
+reviewForm = (restaurant = self.restaurant) => {
   const nameInput = document.getElementById('name-input').value;
   const ratingInput = document.getElementById('rating-input').value;
   const reviewInput = document.getElementById('review-input').value;
 
   let formData = new FormData();
-  formData.append('restaurant_id', restaurant.id);
+  formData.append('restaurant_id', parseInt(restaurant.id));
   formData.append('name', nameInput);
   formData.append('rating', ratingInput);
   formData.append('comments', reviewInput);
 
-  return formData;
+  let ConvertedJSON = {};
+  for (const [key, value] of formData.entries())
+  {
+      ConvertedJSON[key] = value;
+  }
+
+  if (formData.get('restaurant_id') && formData.get('name') && formData.get('rating') && formData.get('comments')) {
+      addReview(ConvertedJSON);
+      return formData;
+  } else {
+    alert('error')
+  }
 }
 
-postData = () => {
-  return fetch('http://localhost:1337/reviews/', {
-    method: "POST",
+// -------------------------------------------------------------------------------------------
+addReview = (data) => {
+  let offline_obj = {
+    name: 'addReview',
+    data: JSON.stringify(data),
+    object_type: 'review'
+  };
+
+  // check if online
+  if (!navigator.online && (offline_obj.name == 'addReview')) {
+    sendDataOffline(offline_obj);
+    return;
+  }
+  // reviewSend == formData
+}
+
+sendDataOffline = (offline_obj) => {
+  console.log('Offline OBJ', offline_obj);
+  localStorage.setItem('data', JSON.stringify(offline_obj.data));
+  console.log(`Local storage: ${offline_obj.object_type} stored`);
+
+  window.addEventListener('online', (event) => {
+    console.log('Browser online again!');
+    let data = JSON.parse(localStorage.getItem('data'));
+
+    [...document.querySelectorAll(".reviews_offline")]
+    .forEach(el => {
+      el.classList.remove('reviews_offline');
+      el.querySelector('offline_label').remove()
+    });
+    if (data !== null) {
+      if (offline_obj.name === 'addReview') {
+        postReview(offline_obj.data);
+        console.log('Data sent');
+      }
+
+      localStorage.removeItem('data');
+      console.log(`Local storage: ${offline_obj.object_type} removed`)
+    }
+  });
+}
+
+/**
+ * Create post request to the server with the body of the form
+ */
+postReview = () => {
+  fetch('http://localhost:1337/reviews/', {
+    method: 'POST',
     body: reviewForm()
+  }).then(
+    response => response.json()
+  ).catch(
+    error => console.error(`Fetch Error =\n`, error)
+  ).then(
+    response => console.log('Success:', response)
+  );
+};
+
+/**
+ * Create PUT request to make a restaurant favorite boiiiii
+ */
+deleteReview = (reviewId) => {
+  fetch('http://localhost:1337/reviews/' + reviewId, {
+    method: 'DELETE'
   }).then(
     response => response.json()
   ).catch(
@@ -179,6 +230,7 @@ postData = () => {
  */
 createReviewHTML = (review) => {
   const li = document.createElement('li');
+
   const name = document.createElement('b');
   name.innerHTML = review.name;
   li.appendChild(name);
@@ -195,7 +247,17 @@ createReviewHTML = (review) => {
   comments.innerHTML = review.comments;
   li.appendChild(comments);
 
+  const postDelete = document.createElement('button');
+  postDelete.setAttribute('onclick', 'deleteReview(' + review.id +')');
+  postDelete.classList.add('delete-review'); 
+  postDelete.innerHTML= 'X';
+  li.appendChild(postDelete);
+
   return li;
+}
+
+updateValue = (val) => {
+  document.getElementById('rating-output').value = val;
 }
 
 /**

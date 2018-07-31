@@ -142,12 +142,14 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  */
 createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
-  //const li_tabindex = li.id + 3
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
+  image.classList.add('lazyload');
   image.alt = 'Image of ' + restaurant.name + ' restaurant';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.setAttribute('src', '/img/spinner.gif');
+  image.setAttribute('data-src', DBHelper.imageUrlForRestaurant(restaurant));
+
   li.append(image);
 
   const name = document.createElement('h2');
@@ -169,7 +171,50 @@ createRestaurantHTML = (restaurant) => {
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more);
 
+  const star = document.createElement('span');
+  star.innerHTML = '&#x2606;';
+  star.setAttribute('id', 'star' + restaurant.id);
+  star.setAttribute('class', 'star');
+  star.setAttribute('onclick', `isFavorite(${restaurant.id})`);
+  if (restaurant.is_favorite == 'true') {
+    star.classList.add('selected');
+  }
+  li.append(star);
+
   return li
+}
+
+/**
+  * Edits Restaurant with PUT request and will add it to the favorite
+  */
+isFavorite = (restaurantId) => {
+  fetch(`http://localhost:1337/restaurants/${restaurantId}`)
+  .then((response) => {
+    return response.json();
+  })
+  .then((data) => {
+    favCheck(data.is_favorite)
+  });
+
+  favCheck = (isFav) => {
+    if (isFav == 'true') {
+      fetch(`http://localhost:1337/restaurants/${restaurantId}/?is_favorite=false`, {
+          method: "PUT",
+      })
+      .then(response => response.json())
+      .catch(error => console.error(`Fetch Error =\n`, error))
+      .then(response => console.log('false Success:', response.is_favorite));
+      document.getElementById('star' + restaurantId).classList.remove('selected');;
+    } else {
+      fetch(`http://localhost:1337/restaurants/${restaurantId}/?is_favorite=true`, {
+          method: "PUT",
+      })
+      .then(response => response.json())
+      .catch(error => console.error(`Fetch Error =\n`, error))
+      .then(response => console.log('true Success:', response.is_favorite));
+      document.getElementById('star' + restaurantId).classList.add('selected');
+    }
+  }
 }
 
 /**

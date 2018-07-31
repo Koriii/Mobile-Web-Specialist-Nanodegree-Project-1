@@ -1,6 +1,5 @@
 const CACHE_NAME = 'restaurant-reviews-v1';
 
-
 self.addEventListener('install', (event) => {
   // Perform install steps
   event.waitUntil(
@@ -11,26 +10,28 @@ self.addEventListener('install', (event) => {
       'http://localhost:8000',
       'index.html',
       'restaurant.html',
-      'css/styles.css',
-      'js/main.js',
-      'js/restaurant_info.js',
-      'js/dbhelper.js',
-      'js/idb/index.js',
+      'css/styles.min.css',
+      'js_prod/main.min.js',
+      'js_prod/lazy.min.js',
+      'js_prod/restaurant_info.min.js',
+      'js_prod/dbhelper.min.js',
+      'js_prod/idb/index.min.js',
       'http://localhost:1337/restaurants',
+      'http://localhost:1337/reviews',
       ]);
     })
   );
 });
 
 self.addEventListener('fetch',  (event) => {
-    event.respondWith(
-        caches.match(event.request).then((res) =>{
-            if(res){
-                return res;
-            }
-            return requestBackend(event);
-        })
-    )
+  event.respondWith(
+      caches.match(event.request).then((res) =>{
+          if(res){
+              return res;
+          }
+          return requestBackend(event);
+      })
+  )
 });
 
 function requestBackend(event){

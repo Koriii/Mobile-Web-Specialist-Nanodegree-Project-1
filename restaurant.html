@@ -5,7 +5,7 @@
   <!-- Normalize.css for better cross-browser consistency -->
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <!-- Main CSS file -->
-  <link rel="stylesheet" href="css/styles.css" type="text/css">
+  <link rel="stylesheet" href="css/styles.min.css" type="text/css">
 
   <link rel="manifest" href="/manifest.webmanifest">
   
@@ -55,6 +55,25 @@
     <section id="reviews-container">
       <ul id="reviews-list"></ul>
     </section>
+
+    <section id="review-form">
+      <h2>Add review</h1>
+      <div id="form-container">
+        <label for="name-input">Name</label>
+        <input name="name-input" type="text" id="name-input"/>
+
+        <label for="rating-input">Rating</label>
+        <div class="slider-container">
+          <output name="rating-output" id="rating-output">1</output>
+          <input name="rating-input" type="range" min="1" max="5" value="1" onchange="updateValue(this.value);" class="slider" id="rating-input"/>
+        </div>
+
+        <label for="review-input">Review</label>
+        <textarea name="review-input" id="review-input" cols="30" rows="10" class="review-textarea"></textarea>
+
+        <button class="submit-button" onclick="postReview()">Submit</button>
+      </div>
+    </section>
     <!-- End reviews -->
   </main>
   <!-- End main -->
@@ -67,11 +86,11 @@
 
   <!-- Beginning scripts -->
   <!-- Database helpers -->
-  <script type="application/javascript" charset="utf-8" src="js/idb.js"></script>
-  <script type="text/javascript" src="js/dbhelper.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js_prod/idb.min.js"></script>
+  <script type="text/javascript" src="js_prod/dbhelper.min.js"></script>
   <!-- Main javascript file -->
-  <script type="text/javascript" src="js/restaurant_info.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js/idb/index.js"></script>
+  <script type="text/javascript" src="js_prod/restaurant_info.min.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js_prod/idb/index.min.js"></script>
   <!-- Google Maps -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfb54SpUblRU9P-HzdLTIClow5iYeGgkM&libraries=places&callback=initMap"></script>
   <!-- End scripts -->
