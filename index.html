@@ -3,7 +3,7 @@
 
 <head>
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
-  <link rel="stylesheet" href="css/styles.min.css">
+  <link rel="stylesheet" href="css/styles.css">
   <link rel="manifest" href="/manifest.webmanifest">
   <title>Restaurant Reviews</title>
   <meta charset="UTF-8">
@@ -22,8 +22,9 @@
   </header>
 
   <main id="maincontent">
+    <button class="map-toggle" onclick="mapToggle()">Toggle map visibility</button>
     <section role="application" id="map-container">
-      <div id="map"></div>
+      <div id="map" style="display: none"></div>
     </section>
     
     <section>
@@ -48,11 +49,11 @@
   <footer id="footer">
     Copyright (c) 2017 <a href="/" title="Go to Restaurant Reviews" rel="Footer link to Restaurant Reviews" aria-current="page"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
   </footer>
-  <script src="js_prod/lazy.min.js" async=""></script>
-  <script type="application/javascript" charset="utf-8" src="js_prod/idb.min.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js_prod/dbhelper.min.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js_prod/main.min.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js_prod/idb/index.min.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js_prod/lazy.min.js" async=""></script>
+  <script type="application/javascript" charset="utf-8" src="js/idb.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/idb/index.js"></script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfb54SpUblRU9P-HzdLTIClow5iYeGgkM&libraries=places&callback=initMap"></script>
 </body>
 

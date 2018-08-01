@@ -175,7 +175,7 @@ createRestaurantHTML = (restaurant) => {
   star.innerHTML = '&#x2606;';
   star.setAttribute('id', 'star' + restaurant.id);
   star.setAttribute('class', 'star');
-  star.setAttribute('onclick', `isFavorite(${restaurant.id})`);
+  star.setAttribute('onclick', `isFavorite(${restaurant.id});addFavorite(${restaurant.id})`);
   if (restaurant.is_favorite == 'true') {
     star.classList.add('selected');
   }
@@ -184,10 +184,28 @@ createRestaurantHTML = (restaurant) => {
   return li
 }
 
+addFavorite = (data) => {
+  let offline_obj = {
+    name: 'addFavorite',
+    data: JSON.stringify(data),
+    object_type: 'restaurant'
+  };
+
+  // check if online
+  if (!navigator.onLine && (offline_obj.name == 'addFavorite')) {
+    console.log(data)
+    document.getElementById("star" + data).style.color = "red";
+    sendDataOffline(offline_obj);
+    return;
+  }
+  // reviewSend == formData
+}
+
 /**
   * Edits Restaurant with PUT request and will add it to the favorite
   */
 isFavorite = (restaurantId) => {
+  console.log(restaurantId)
   fetch(`http://localhost:1337/restaurants/${restaurantId}`)
   .then((response) => {
     return response.json();
@@ -218,6 +236,44 @@ isFavorite = (restaurantId) => {
 }
 
 /**
+ * For storing the data inside localStorage
+ */
+sendDataOffline = (offline_obj) => {
+  console.log('Offline OBJ', offline_obj);
+  localStorage.setItem('data', JSON.stringify(offline_obj.data));
+  console.log(`Local storage: ${offline_obj.object_type} stored`);
+
+  window.addEventListener('online', (event) => {
+    console.log('Browser online again!');
+    let data = JSON.parse(localStorage.getItem('data'));
+
+    [...document.querySelectorAll(".reviews_offline")]
+    .forEach(el => {
+      el.classList.remove('reviews_offline');
+      el.querySelector('offline_label').remove()
+    });
+    if (data !== null) {
+      if (offline_obj.name === 'addFavorite') {
+        isFavorite(offline_obj.data);
+        console.log('Data sent');
+      }
+
+      localStorage.removeItem('data');
+      console.log(`Local storage: ${offline_obj.object_type} removed`)
+    }
+  });
+}
+
+mapToggle = () => {
+  let map = document.getElementById('map');
+  if (map.style.display == "") {
+      map.style.display = "none";
+  } else {
+      map.style.display = "";
+  }
+}
+
+/**
  * Add markers for current restaurants to the map.
  */
 addMarkersToMap = (restaurants = self.restaurants) => {
@@ -232,11 +288,11 @@ addMarkersToMap = (restaurants = self.restaurants) => {
 }
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/sw.js').then(function(registration) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').then((registration) => {
       // Registration was successful
       console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    }, function(err) {
+    }, (err) => {
       // registration failed :(
       console.log('ServiceWorker registration failed: ', err);
     });

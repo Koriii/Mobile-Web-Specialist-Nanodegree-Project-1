@@ -24,12 +24,13 @@
     <!-- Beginning nav -->
     <nav>
       <h1><a href="/" title="Go to Restaurant Reviews">Restaurant Reviews</a></h1>
+
+      <!-- Beginning breadcrumb -->
+      <ul aria-label="Breadcrumb" id="breadcrumb" >
+        <li><a href="/" title="Go to Restaurant Reviews">Home</a></li>
+      </ul>
+      <!-- End breadcrumb -->
     </nav>
-    <!-- Beginning breadcrumb -->
-    <ul aria-label="Breadcrumb" id="breadcrumb" >
-      <li><a href="/" title="Go to Restaurant Reviews">Home</a></li>
-    </ul>
-    <!-- End breadcrumb -->
     <!-- End nav -->
   </header>
   <!-- End header -->
@@ -39,7 +40,7 @@
     <!-- Beginning map -->
     
     <section role="appliaction" id="map-container">
-      <div id="map"></div>
+      <div role="appliaction" id="map"></div>
     </section>
     <!-- End map -->
     <!-- Beginning restaurant -->
@@ -58,7 +59,7 @@
 
     <section id="review-form">
       <h2>Add review</h1>
-      <div id="form-container">
+      <div id="form-container" role="form">
         <label for="name-input">Name</label>
         <input name="name-input" type="text" id="name-input"/>
 
@@ -86,11 +87,11 @@
 
   <!-- Beginning scripts -->
   <!-- Database helpers -->
-  <script type="application/javascript" charset="utf-8" src="js_prod/idb.min.js"></script>
-  <script type="text/javascript" src="js_prod/dbhelper.min.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/idb.js"></script>
+  <script type="text/javascript" src="js/dbhelper.js"></script>
   <!-- Main javascript file -->
-  <script type="text/javascript" src="js_prod/restaurant_info.min.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js_prod/idb/index.min.js"></script>
+  <script type="text/javascript" src="js/restaurant_info.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/idb/index.js"></script>
   <!-- Google Maps -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfb54SpUblRU9P-HzdLTIClow5iYeGgkM&libraries=places&callback=initMap"></script>
   <!-- End scripts -->

@@ -108,6 +108,9 @@ nav h1 a {
   width: 100%;
   background-color: #ccc;
 }
+#map-toggle {
+  float: left;
+}
 /* ====================== Restaurant Filtering ====================== */
 
 .filter-options {
@@ -241,6 +244,7 @@ nav h1 a {
   z-index: 1000;
 }
 .inside #map-container {
+  display: none;
   background: blue none repeat scroll 0 0;
   height: 85%;
   position: fixed;
@@ -346,6 +350,10 @@ nav h1 a {
 #reviews-container > ul > li > :nth-child(3) {
   text-align: right;
   font-size: 1.01rem
+}
+
+.reviews_offline{
+  border: 2px solid red;
 }
 
 /* ====================== Media Breakpoints ====================== */

@@ -146,10 +146,47 @@ reviewForm = (restaurant = self.restaurant) => {
 
   if (formData.get('restaurant_id') && formData.get('name') && formData.get('rating') && formData.get('comments')) {
       addReview(ConvertedJSON);
+      createReviewHTML(formData);
       return formData;
   } else {
     alert('error')
   }
+}
+
+/**
+ * Create review HTML and add it to the webpage.
+ */
+createReviewHTML = (review) => {
+  console.log('create review')
+  const li = document.createElement('li');
+
+  const name = document.createElement('b');
+  name.innerHTML = review.name;
+  li.appendChild(name);
+
+  const date = document.createElement('span');
+  date.innerHTML = review.createdAt;
+  li.appendChild(date);
+
+  const rating = document.createElement('p');
+  rating.innerHTML = `Rating: ${review.rating}`;
+  li.appendChild(rating);
+
+  const comments = document.createElement('p');
+  comments.innerHTML = review.comments;
+  li.appendChild(comments);
+
+  const postDelete = document.createElement('button');
+  postDelete.setAttribute('onclick', `deleteReview(${review.id})`);
+  postDelete.classList.add('delete-review'); 
+  postDelete.innerHTML= 'X';
+  li.appendChild(postDelete);
+
+  return li;
+}
+
+updateValue = (val) => {
+  document.getElementById('rating-output').value = val;
 }
 
 // -------------------------------------------------------------------------------------------
@@ -160,14 +197,15 @@ addReview = (data) => {
     object_type: 'review'
   };
 
-  // check if online
-  if (!navigator.online && (offline_obj.name == 'addReview')) {
+  if (!navigator.onLine && (offline_obj.name == 'addReview')) {
     sendDataOffline(offline_obj);
     return;
   }
-  // reviewSend == formData
 }
 
+/**
+ * For storing the data inside localStorage
+ */
 sendDataOffline = (offline_obj) => {
   console.log('Offline OBJ', offline_obj);
   localStorage.setItem('data', JSON.stringify(offline_obj.data));
@@ -180,7 +218,7 @@ sendDataOffline = (offline_obj) => {
     [...document.querySelectorAll(".reviews_offline")]
     .forEach(el => {
       el.classList.remove('reviews_offline');
-      el.querySelector('offline_label').remove()
+      el.querySelector('offline_label').remove();
     });
     if (data !== null) {
       if (offline_obj.name === 'addReview') {
@@ -198,6 +236,7 @@ sendDataOffline = (offline_obj) => {
  * Create post request to the server with the body of the form
  */
 postReview = () => {
+  createReviewHTML(reviewForm());
   fetch('http://localhost:1337/reviews/', {
     method: 'POST',
     body: reviewForm()
@@ -221,44 +260,11 @@ deleteReview = (reviewId) => {
   ).catch(
     error => console.error(`Fetch Error =\n`, error)
   ).then(
-    response => console.log('Success:', response)
+    response => {
+      console.log('Success:', response)
+    }
   );
 };
-
-/**
- * Create review HTML and add it to the webpage.
- */
-createReviewHTML = (review) => {
-  const li = document.createElement('li');
-
-  const name = document.createElement('b');
-  name.innerHTML = review.name;
-  li.appendChild(name);
-
-  const date = document.createElement('span');
-  date.innerHTML = review.createdAt;
-  li.appendChild(date);
-
-  const rating = document.createElement('p');
-  rating.innerHTML = `Rating: ${review.rating}`;
-  li.appendChild(rating);
-
-  const comments = document.createElement('p');
-  comments.innerHTML = review.comments;
-  li.appendChild(comments);
-
-  const postDelete = document.createElement('button');
-  postDelete.setAttribute('onclick', 'deleteReview(' + review.id +')');
-  postDelete.classList.add('delete-review'); 
-  postDelete.innerHTML= 'X';
-  li.appendChild(postDelete);
-
-  return li;
-}
-
-updateValue = (val) => {
-  document.getElementById('rating-output').value = val;
-}
 
 /**
  * Add restaurant name to the breadcrumb navigation menu
@@ -284,4 +290,16 @@ getParameterByName = (name, url) => {
   if (!results[2])
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').then((registration) => {
+      // Registration was successful
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }, (err) => {
+      // registration failed :(
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
 }
