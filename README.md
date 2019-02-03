@@ -2,6 +2,8 @@
 ---
 #### _Three Stage Course Material Project - Restaurant Reviews_
 npm i
+download server app from the other repository
+
 Install Sails.js globally
 
 npm i sails -g
